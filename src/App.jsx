@@ -1,6 +1,7 @@
 import "./App.css"
 import Pruebita from "./components/pruebabd/pruebita";
 
+
 function App() {
   return (
     <div>
@@ -8,3 +9,4 @@ function App() {
     </div>
   );
 }
+export default App;
