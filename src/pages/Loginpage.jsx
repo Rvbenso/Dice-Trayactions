@@ -1,6 +1,7 @@
-import React from 'react'
-import Pruebita from '../components/pruebabd/pruebita'
-import Header from '../components/common/header'
+import React from 'react';
+import Footer from "../components/common/Footer";
+import Header from "../components/common/Header";
+import Login from "../components/login/login";
 
 
 export default function Loginpage() {
@@ -8,8 +9,9 @@ export default function Loginpage() {
     <div id="loginPageContainer">
       <div id="loginPageContent">
         <div id='loginPageLogic'>
-            <Header/>
-          <Pruebita/>
+          <Header/>
+          <Login/>
+          <Footer/>  
         </div>
       </div>  
     </div>
