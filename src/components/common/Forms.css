@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+section {
+   @apply absolute mt-[10%] h-fit shadow-lg flex rounded-2xl bg-[#97c5ba] border-3 p-15 overflow-auto justify-center items-center;
+}
+
+#campo {
+   @apply flex flex-col justify-center mb-[20px];
+}
+
+label {
+   @apply text-2xl text-left m-2 font-semibold;
+}
+#input {
+   @apply relative flex items-center w-full;
+}
+#imgLogo {
+   @apply m-1 h-[30px];
+}

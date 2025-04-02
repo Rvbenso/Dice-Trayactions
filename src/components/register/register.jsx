@@ -1,20 +1,24 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form"; //Es necesario instalar react-hook-form.
 import { supabase } from "../supabase/SupabaseClient";
 import { Link, useNavigate } from "react-router-dom";
 import userLogo from "../../assets/userLogo.png";
 import emailLogo from "../../assets/emailLogo.png";
 import passLogo from "../../assets/passLogo.png";
+import "../common/Main.css";
+import "../common/Forms.css";
 
 
 function Register() {
-    
+
     const { register, formState: { errors }, watch, handleSubmit } = useForm(); //Aqui se prepara el formulario para el envio y se muestran las restricciones de cada apartado.
-    
+
     const SendForm = (data) => {
         console.log(data);  //Aqui se instancia la ruta hacia donde se enviara el formulario ya creado.
         signUpNewUser(data);
     }
+
+    {/* ---------- Comparation to Database to do signUp ---------- */ }
     async function signUpNewUser(dataUser) {
         const { data, error } = await supabase.auth.signUp(
             {
@@ -40,149 +44,167 @@ function Register() {
         }
     }
 
+    {/* ---------- Errors config ---------- */ }
+    const validationRules = (field) => {
+        switch (field) {
+            case "email":
+                return {
+                    required: "El email es obligatorio",
+                    pattern: {
+                        value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/i,
+                        message: "El formato del email es incorrecto",
+                    },
+                };
+            case "password":
+                return {
+                    required: "La contraseña es obligatoria",
+                    minLength: {
+                        value: 6,
+                        message: "La contraseña debe tener al menos 6 caracteres",
+                    },
+                };
+            case "password2":
+                return {
+                    required: "La contraseña es obligatoria",
+                    minLength: {
+                        value: 6,
+                        message: "La contraseña debe tener al menos 6 caracteres",
+                    },
+                    validate: value => value === watch('pass') || 'Las contraseñas deben ser iguales',
+                };
+
+            case "user":
+                return {
+                    required: "La contraseña es obligatoria",
+                    maxLength: {
+                        value: 15,
+                        message: "El usuario no debe tener mas de 15 caracteres",
+                    },
+                };
+            default:
+                return {};
+        }
+    };
+    const ErrorMessage = ({ error }) => {
+        return error ? <p className="text-red-600 ml-13 mt-2">{error.message}</p> : null;
+    };
+
+    {/* ---------- Common classes ---------- */ }
+    const inputBaseClasses = "focus:border-blue-600 focus:outline-none border-2 rounded-3xl p-2 w-full";
+
+
+
 
     return (
-        <main
-            className="">
+        <main>
+            <section id="registerForm">
 
-            <div className="">
                 <form onSubmit={handleSubmit(SendForm)}>
-                    <h1 className="">Crear cuenta</h1>
+                    <p className="text-3xl text-center font-bold p-2 mb-5 -mt-8">Crear cuenta</p>
 
-                    {/*Parametro Nombre*/}
+                    {/*User parametter*/}
 
-                    <div className="">
+                    <div id="campo">
 
-                        <label className="" for="Name">Nombre</label><br />
+                        <label htmlFor="user">Nombre</label>
 
-                        <div className="">
-                            <img src={userLogo} alt="userLogo" className=""></img>
+                        <div id="input">
+                            <img id="imgLogo" src={userLogo} alt="userLogo"></img>
                             <input
-
-                                className=""
-                                id="Name"
+                                id="user"
                                 name='user'
                                 type='text'
                                 placeholder="Introduce tu nombre"
-                                {...register
-                                    ('user',
-                                        {
-                                            required: { value: true, message: 'Introduce tu nombre' },
-                                            required: { value: true, message: 'Introduce tu nombre' },
-                                            maxLength: { value: 15, message: 'El nombre no debe superar los 15 caracteres' }
-                                        }
-                                    )
-                                }></input>
-                             
+                                className={`${inputBaseClasses}
+                                ${errors.user ? "border-red-600 not-focus:border-red-600 focus:border-red-600" : "not-focus:border-black border-blue-600 focus:border-blue-600"}`}
+                                {...register("user", validationRules("user"))}></input>
                         </div>
                     </div>
 
-                    {errors.user && <p className="">{errors.user.message}</p>}
+                    <ErrorMessage error={errors.user} />
 
-                    {/*----------------*/}
 
-                    {/*/Parametro email*/}
+                    {/*Email parametter*/}
 
-                    <div className="">
+                    <div id="campo">
 
-                        <label className="" for="email">E-mail</label><br />
+                        <label htmlFor="email">E-mail</label>
 
-                        <div className="">
-                            <img src={emailLogo} alt="emailLogo" className=""></img>
+                        <div id="input">
+                            <img id="imgLogo" src={emailLogo} alt="emailLogo"></img>
                             <input
-                                className= ""
-                                 
                                 id="email"
                                 name='email'
                                 type='text'
                                 placeholder="Introduce tu email"
-                                {...register
-                                    ('email',
-                                        {
-                                            required: { value: true, message: 'Este campo es obligatorio' },
-                                            pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/i, message: 'El formato del email es incorrecto' }
-                                        }
-                                    )
-                                } />
-                              
+                                className={`${inputBaseClasses}
+                                ${errors.password ? "border-red-600 not-focus:border-red-600 focus:border-red-600 focus:text-red-600" : "not-focus:border-black border-blue-600 focus:border-blue-600"}`}
+                                {...register("email", validationRules("email"))}
+                            />
+
                         </div>
                     </div>
 
-                    {errors.email && <p className="">{errors.email.message}</p>}
+                    <ErrorMessage error={errors.email} />
 
                     {/*---------------*/}
 
-                    {/*/Parametro Pass*/}
+                    {/*/Password parametter*/}
 
-                    <div className="">
+                    <div id="campo">
 
-                        <label className="" for="pass">Contraseña </label><br />
-
-                        <div className="">
-                            <img src={passLogo} alt="passLogo" className=""></img>
+                        <label htmlFor="password">Contraseña </label>
+                        <div id="input">
+                            <img id="imgLogo" src={passLogo} alt="passLogo"></img>
                             <input
-                                className=""
-                                id="pass"
-                                name='pass'
+                                id="password"
+                                name='password'
                                 type='password'
                                 placeholder="Introduce tu contraseña"
-                                {...register
-                                    ('pass',
-                                        {
-                                            required: { value: true, message: 'Este campo es obligatorio' },
-                                            minLength: { value: 6, message: 'Debe tener al menos 6 caracteres' }
-                                        }
-                                    )
-                                } />
-                              
+                                className={`${inputBaseClasses}
+                                ${errors.password ? "border-red-600 not-focus:border-red-600 focus:border-red-600" : "not-focus:border-black border-blue-600 focus:border-blue-600"}`}
+                                {...register("password", validationRules("password"))} />
+
                         </div>
                     </div>
 
-                    {errors.pass && <p className="" >{errors.pass.message}</p>}
+                    <ErrorMessage error={errors.password} />
 
                     {/*----------------*/}
 
-                    {/*/Parametro Pass2*/}
+                    {/*/Password2 parametter*/}
 
-                    <div className="">
+                    <div id="campo">
 
-                        <label className="" for="pass2">Confirma tu contraseña </label><br />
+                        <label htmlFor="password2">Confirma tu contraseña </label>
 
-                        <div className="">
-                            <img src={passLogo} alt="passLogo" className=""></img>
+                        <div id="input">
+                            <img id="imgLogo" src={passLogo} alt="passLogo"></img>
                             <input
-                                className=""
-                                id="pass2"
-                                name='pass2'
+
+                                id="password2"
+                                name='password2'
                                 type='password'
                                 placeholder="Repide tu contraseña"
-
-                                {...register
-                                    (
-                                        'pass2',
-                                        {
-                                            required: { value: true, message: 'Este campo es obligatorio' },
-                                            minLength: { value: 6, message: 'Debe tener al menos 6 caracteres' },
-                                            validate: value => value === watch('pass') || 'Las contraseñas no coinciden.' //Con esto comparamos las contraseñas con el watch
-                                        }
-                                    )
-                                } />
+                                className={`${inputBaseClasses}
+                                ${errors.password ? "border-red-600 not-focus:border-red-600 focus:border-red-600" : "not-focus:border-black border-blue-600 focus:border-blue-600"}`}
+                                {...register("password2", validationRules("password2"))} />
                         </div>
                     </div>
 
-                    {errors.pass2 && <p className="" >{errors.pass2.message}</p>}
+                    <ErrorMessage error={errors.password2} />
                     {/*----------------*/}
 
-                    <div className="w">
-                        <input className="" type="submit" value="Registrarse"></input><br /><br />
-                    </div>
+                    <button type="submit"> Registrarse </button>
 
-                    <hr className="" />
-                    <h1 className="">¿Ya tienes cuenta? <Link className="text-blue-700 font-bold" to="/" >Iniciar sesión</Link></h1>
+                    <hr className="my-4 mt-[20px] mb-[20px]" />
+
+                    <p className="mt-[20px] text-center">¿Ya tienes cuenta? <Link className="text-blue-700 font-bold" to="/" >Iniciar sesión</Link></p>
                 </form>
-            </div>
+
+            </section>
         </main>
-    )
+    );
 }
 
 export default Register;

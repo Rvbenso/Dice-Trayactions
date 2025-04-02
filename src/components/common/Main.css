@@ -1,0 +1,5 @@
+@import "tailwindcss";
+
+main {
+    @apply absolute overflow-x-hidden bg-[#2e816d] w-screen h-screen bottom-[30px] pt-5 z-1 flex justify-center items-center;
+}

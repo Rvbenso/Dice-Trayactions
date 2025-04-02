@@ -1,0 +1,5 @@
+@import "tailwindcss";
+
+button {
+    @apply mt-[40px] mb-[30px] justify-center flex border-1 hover:border-hidden border-[#2e816d] bg-[#2e816d] hover:bg-[#36665c] text-black hover:text-white text-lg md:text-xl lg:text-xl font-bold rounded-3xl p-2 w-full;
+}
